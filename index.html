@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>buliisa expose</title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap'><link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0F1C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Buliisa Expose | Music Uganda</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <style>
+    /* ============================================
+       BULIISA EXPOSE - COMPLETE CSS
+       (Original layout preserved, Admin Panel added)
+       ============================================ */
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0f;
+      padding-bottom: 85px;
+      color: #e5e7eb;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      width: 100%;
+      overscroll-behavior: none;
+    }
+
+    h1, h2, h3 {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1a1a1f;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #f59e0b;
+      border-radius: 10px;
+    }
+
+    /* Circular Loading */
+    .circular-loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .circular-loading-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .circular-loader {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loader-ring-outer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: #f59e0b;
+      border-right-color: #ea580c;
+      border-bottom-color: #fbbf24;
+      animation: spin 1.2s linear infinite;
+    }
+
+    .loader-ring-middle {
+      position: absolute;
+      width: 75%;
+      height: 75%;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-bottom-color: #d97706;
+      border-left-color: #fcd34d;
+      animation: spin-reverse 0.8s linear infinite;
+    }
+
+    .loader-ring-inner {
+      position: absolute;
+      width: 45%;
+      height: 45%;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: #f59e0b;
+      animation: spin 0.6s linear infinite;
+    }
+
+    .loader-center {
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.5s ease-in-out infinite;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+    }
+
+    .loader-center i {
+      font-size: 28px;
+      color: white;
+    }
+
+    .loading-text-container {
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .loading-text {
+      color: #f59e0b;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 6px 15px;
+      border-radius: 30px;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes spin-reverse {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.85); opacity: 0.9; }
+    }
+
+    /* Toast Notification */
+    .toast-notification {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1f2937;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 40px;
+      z-index: 1000;
+      font-size: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      border-left: 3px solid #f59e0b;
+      white-space: nowrap;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Song List View */
+    .artist-songs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .song-list-item {
+      background: rgba(31, 41, 55, 0.6);
+      border: 1px solid #374151;
+      border-radius: 12px;
+      padding: 10px 12px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .song-list-item:active {
+      background: rgba(245, 158, 11, 0.15);
+      transform: scale(0.99);
+    }
+
+    .song-list-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .song-rank-number {
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .rank-number {
+      font-size: 12px;
+      font-weight: bold;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.15);
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .song-title-section {
+      flex: 2;
+      min-width: 0;
+    }
+
+    .song-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .song-title-main {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+
+    .song-artist-name {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .song-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .song-stats {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      color: #6b7280;
+    }
+
+    .song-stats span {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .song-play-btn-list {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .song-download-btn-list {
+      background: #374151;
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 30px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    /* PAGINATION */
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 30px;
+      padding: 15px 0;
+      border-top: 1px solid #374151;
+      width: 100%;
+    }
+
+    .pagination-btn {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .pagination-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pagination-btn:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .page-info {
+      color: #f59e0b;
+      font-weight: 600;
+      background: rgba(245, 158, 11, 0.1);
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 13px;
+    }
+
+    /* Artist Grids - Original */
+    #artistsGrid,
+    #categoryArtistsGrid,
+    #similarArtistsGrid {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+    }
+
+    @media (max-width: 480px) {
+      #artistsGrid,
+      #categoryArtistsGrid,
+      #similarArtistsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    @media (min-width: 481px) and (max-width: 768px) {
+      #artistsGrid,
+      #categoryArtistsGrid,
+      #similarArtistsGrid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      #artistsGrid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      #categoryArtistsGrid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      #similarArtistsGrid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .featured-artist-card,
+    .category-artist-card,
+    .similar-artist-card {
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      max-width: 100px;
+      margin: 0 auto;
+    }
+
+    .featured-artist-card img,
+    .category-artist-card img,
+    .similar-artist-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #f59e0b;
+      transition: all 0.3s ease;
+    }
+
+    .featured-artist-card .artist-name span,
+    .category-artist-card .artist-name span,
+    .similar-artist-card .artist-name span {
+      font-size: 11px;
+      font-weight: 600;
+      color: #e5e7eb;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 3px 8px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    /* Category Chips */
+    #categoriesGrid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .category-chip {
+      padding: 5px 10px !important;
+      font-size: 10px !important;
+      background: rgba(31, 41, 55, 0.6);
+      border: 1px solid #374151;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    /* Navbar */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1f1f25;
+    }
+
+    /* Back Button */
+    .page-history {
+      position: fixed;
+      bottom: 70px;
+      left: 8px;
+      z-index: 100;
+    }
+
+    .back-nav-btn {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-size: 11px;
+      font-weight: 500;
+      border: 1px solid #f59e0b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Audio Player */
+    #globalAudioPlayer {
+      background: rgba(15, 15, 20, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid #2a2a30;
+      padding: 8px 10px;
+    }
+
+    #progressBar {
+      accent-color: #f59e0b;
+      height: 3px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #adminToggleBtn {
+      display: none;
+    }
+
+    #adminToggleBtn.admin-visible {
+      display: flex !important;
+      position: fixed;
+      top: 70px;
+      right: 8px;
+      padding: 5px 10px;
+      font-size: 10px;
+      z-index: 50;
+    }
+
+    /* APK Button Styles */
+    #downloadApkBtn {
+      transition: all 0.3s ease;
+    }
+    #downloadApkBtn:active {
+      transform: scale(0.97);
+    }
+
+    /* ADMIN PANEL MODAL STYLES */
+    .admin-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 20000;
+      display: none;
+      overflow-y: auto;
+    }
+
+    .admin-modal.active {
+      display: block;
+    }
+
+    .admin-modal-content {
+      max-width: 1200px;
+      margin: 20px auto;
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid #374151;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .admin-tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .admin-tab.active {
+      color: #f59e0b;
+      border-bottom: 2px solid #f59e0b;
+    }
+
+    .admin-panel {
+      display: none;
+    }
+
+    .admin-panel.active {
+      display: block;
+    }
+
+    /* Admin Table Styles */
+    .admin-table {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .admin-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .admin-table th,
+    .admin-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #374151;
+    }
+
+    .admin-table th {
+      background: #0f0f1a;
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .admin-table tr:hover {
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .admin-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .delete-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .delete-btn:hover {
+      background: #b91c1c;
+    }
+
+    .bulk-delete-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      margin-right: 10px;
+    }
+
+    .select-all-btn {
+      background: #374151;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    .search-filter {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #0f0f1a;
+      border-radius: 10px;
+    }
+
+    .search-filter input {
+      width: 100%;
+      padding: 10px;
+      background: #1f1f2e;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      color: white;
+    }
+
+    /* Batch Upload Styles */
+    .batch-upload-area {
+      background: #0f0f1a;
+      border: 2px dashed #374151;
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .file-input-group {
+      margin-bottom: 20px;
+    }
+
+    .file-input-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .file-input-group input {
+      width: 100%;
+      padding: 10px;
+      background: #1f1f2e;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      color: white;
+    }
+
+    .upload-preview {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .upload-item {
+      background: #1f1f2e;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .upload-btn {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    .close-admin-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .song-list-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .song-actions {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 6px;
+      }
+      .pagination-btn {
+        padding: 6px 14px;
+        font-size: 11px;
+      }
+      .page-info {
+        font-size: 11px;
+        padding: 4px 10px;
+      }
+      .admin-table th,
+      .admin-table td {
+        padding: 8px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body class="text-gray-200 bg-gray-950">
+
+  <!-- BACK NAVIGATION BUTTON -->
+  <div class="page-history">
+    <button id="backNavigationBtn" class="back-nav-btn text-amber-400 hover:text-amber-300 hidden items-center gap-1">
+      <i class="fas fa-arrow-left text-sm"></i> <span>Back</span>
+    </button>
+  </div>
+
+  <!-- ADMIN BUTTON -->
+  <button id="adminToggleBtn" class="fixed top-16 right-3 z-50 bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-full shadow-lg transition flex items-center gap-1 text-sm">
+    <i class="fas fa-user-shield text-xs"></i> <span>Admin</span>
+  </button>
+
+  <!-- ADMIN MODAL -->
+  <div id="adminModal" class="admin-modal">
+    <div class="admin-modal-content">
+      <button class="close-admin-btn" onclick="closeAdminPanel()">✕ Close</button>
+      
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="upload">📤 Batch Upload</button>
+        <button class="admin-tab" data-tab="songs">🎵 Manage Songs</button>
+        <button class="admin-tab" data-tab="artists">👨‍🎤 Manage Artists</button>
+      </div>
+      
+      <!-- BATCH UPLOAD TAB -->
+      <div id="uploadPanel" class="admin-panel active">
+        <h2 class="text-2xl font-bold mb-4">Batch Upload Songs</h2>
+        <p class="text-gray-400 mb-4">Upload up to 20 songs at once with their cover images</p>
+        
+        <div class="batch-upload-area">
+          <div class="file-input-group">
+            <label><i class="fas fa-music"></i> Select Music Files (MP3, up to 20)</label>
+            <input type="file" id="musicFilesInput" accept="audio/*" multiple>
+          </div>
+          
+          <div class="file-input-group">
+            <label><i class="fas fa-image"></i> Select Cover Images (one per song, same order)</label>
+            <input type="file" id="coverImagesInput" accept="image/*" multiple>
+            <p class="text-xs text-gray-500 mt-1">Select images in the same order as music files</p>
+          </div>
+          
+          <div id="uploadPreview" class="upload-preview"></div>
+          
+          <button id="processBatchUpload" class="upload-btn">🚀 Upload All Songs</button>
+        </div>
+      </div>
+      
+      <!-- MANAGE SONGS TAB -->
+      <div id="songsPanel" class="admin-panel">
+        <h2 class="text-2xl font-bold mb-4">Manage Songs</h2>
+        
+        <div class="search-filter">
+          <input type="text" id="songSearchInput" placeholder="Search songs by title or artist...">
+        </div>
+        
+        <div class="mb-4">
+          <button id="selectAllSongsBtn" class="select-all-btn">☑ Select All</button>
+          <button id="bulkDeleteSongsBtn" class="bulk-delete-btn">🗑 Delete Selected</button>
+        </div>
+        
+        <div class="admin-table" id="songsTableContainer">
+          <!-- Songs table will be rendered here -->
+        </div>
+      </div>
+      
+      <!-- MANAGE ARTISTS TAB -->
+      <div id="artistsPanel" class="admin-panel">
+        <h2 class="text-2xl font-bold mb-4">Manage Artists</h2>
+        
+        <div class="search-filter">
+          <input type="text" id="artistSearchInput" placeholder="Search artists by name...">
+        </div>
+        
+        <div class="mb-4">
+          <button id="selectAllArtistsBtn" class="select-all-btn">☑ Select All</button>
+          <button id="bulkDeleteArtistsBtn" class="bulk-delete-btn">🗑 Delete Selected</button>
+          <p class="text-xs text-red-400 mt-2">⚠️ Deleting an artist will automatically delete all their songs!</p>
+        </div>
+        
+        <div class="admin-table" id="artistsTableContainer">
+          <!-- Artists table will be rendered here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="sticky top-0 z-40 bg-gray-900/95 backdrop-blur-xl border-b border-gray-800/60 shadow-lg">
+    <div class="max-w-7xl mx-auto px-3 py-2 sm:px-5 sm:py-3">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 cursor-pointer shrink-0" id="homeBtn">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center">
+            <i class="fas fa-music text-white text-sm"></i>
+          </div>
+          <span class="text-sm sm:text-xl font-bold text-white">Albertine Music</span>
+          <span class="text-xs bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full ml-1">UG</span>
+        </div>
+        <div class="flex-1 max-w-[180px] sm:max-w-md">
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input type="text" id="searchInput" placeholder="Search songs or artists..." class="w-full bg-gray-800/80 border border-gray-700 rounded-full py-1.5 pl-8 pr-8 text-sm text-white focus:ring-2 focus:ring-amber-500">
+            <button id="searchSubmitBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-amber-400 hover:text-amber-300">
+              <i class="fas fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+        </div>
+        <a href="https://wa.me/256745696901?text=Hello%20Buliisa%20Expose" target="_blank" class="contact-btn hidden sm:flex items-center gap-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-3 py-1.5 rounded-full text-xs font-semibold transition shadow-lg">
+          <i class="fab fa-whatsapp text-sm"></i> <span class="hidden md:inline">Contact</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div id="mainContent">
+    <section id="heroSection" class="pt-8 pb-10 sm:pt-12 sm:pb-16 text-center">
+      <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent px-3">Albertine Music</h1>
+      <p class="text-gray-400 mt-2 text-sm sm:text-base px-3">Discover the best music from Uganda and beyond</p>
+      <div class="mt-4 sm:mt-6 px-3">
+        <a href="https://wa.me/256745696901?text=Hello%20Buliisa%20Expose" target="_blank" class="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full font-semibold transition shadow-lg text-xs sm:text-sm">
+          <i class="fab fa-whatsapp text-base sm:text-xl"></i><span class="hidden xs:inline">Request Music Upload on WhatsApp</span><span class="xs:hidden">UPLOAD MUSIC HERE</span><i class="fas fa-arrow-right text-xs"></i>
+        </a>
+      </div>
+      
+      <!-- APK DOWNLOAD SECTION -->
+      <div class="mt-3 sm:mt-4 px-3">
+        <button id="downloadApkBtn" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full font-semibold transition shadow-lg text-xs sm:text-sm">
+          <i class="fas fa-download text-base sm:text-xl"></i>
+          <span class="hidden xs:inline">Download Albertine Music APK</span>
+          <span class="xs:hidden">DOWNLOAD APP</span>
+          <i class="fas fa-mobile-alt text-xs"></i>
+        </button>
+        <p class="text-gray-500 text-[10px] sm:text-xs mt-2">Get the albertine music mobile app for better experience</p>
+      </div>
+    </section>
+    
+    <section id="categoriesSection" class="max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 class="text-lg sm:text-2xl font-bold flex items-center gap-2"><i class="fas fa-tags text-amber-400 text-sm sm:text-base"></i> Music Categories</h2>
+      </div>
+      <div id="categoriesGrid" class="flex flex-wrap gap-2 mb-6"></div>
+    </section>
+    
+    <section id="trendingSection" class="max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 class="text-lg sm:text-2xl font-bold flex items-center gap-2"><i class="fas fa-fire text-red-500 text-sm sm:text-base"></i> Trending Now</h2>
+      </div>
+      <div id="trendingGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6"></div>
+    </section>
+    
+    <section id="mostPlayedSection" class="max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 class="text-lg sm:text-2xl font-bold flex items-center gap-2"><i class="fas fa-chart-line text-blue-400 text-sm sm:text-base"></i> Most Played</h2>
+      </div>
+      <div id="mostPlayedGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6"></div>
+    </section>
+    
+    <section id="artistsSection" class="max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 class="text-lg sm:text-2xl font-bold flex items-center gap-2"><i class="fas fa-users text-amber-400 text-sm sm:text-base"></i> Featured Artists</h2>
+      </div>
+      <div id="artistsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+    </section>
+    
+    <section id="newSongsSection" class="max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 class="text-lg sm:text-2xl font-bold flex items-center gap-2"><i class="fas fa-calendar-alt text-emerald-400 text-sm sm:text-base"></i> New Releases</h2>
+      </div>
+      <div id="newSongsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6"></div>
+    </section>
+  </div>
+  
+  <div id="categoryArtistsSection" class="hidden max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+    <button id="backToCategoriesBtn" class="text-amber-400 hover:text-amber-300 mb-4 flex items-center gap-1 text-sm"><i class="fas fa-arrow-left"></i> Back to Categories</button>
+    <div id="categoryHeader" class="mb-6">
+      <h2 id="selectedCategoryName" class="text-2xl sm:text-3xl font-bold"></h2>
+      <p id="categoryArtistCount" class="text-gray-400 mt-1 text-sm"></p>
+    </div>
+    <div id="categoryArtistsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6"></div>
+  </div>
+  
+  <div id="artistMusicSection" class="hidden">
+    <div class="max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+      <button id="backToArtistsBtn" class="text-amber-400 hover:text-amber-300 mb-4 flex items-center gap-1 text-sm"><i class="fas fa-arrow-left"></i> Back to Home</button>
+      <div id="artistHeader" class="flex items-center gap-4 mb-6">
+        <div id="selectedArtistImage" class="w-20 h-20 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center overflow-hidden shadow-xl"><i class="fas fa-user fa-3x text-white/60"></i></div>
+        <div><h2 id="selectedArtistName" class="text-2xl sm:text-4xl font-bold"></h2><p id="artistTrackCount" class="text-gray-400 mt-1 text-sm"></p></div>
+      </div>
+      <h3 class="text-base sm:text-xl font-semibold mb-3">All Songs</h3>
+      <div id="artistTracksGrid"></div>
+      
+      <div id="similarArtistsSection" class="mt-8 hidden">
+        <div class="flex items-center gap-2 mb-4"><i class="fas fa-users text-pink-400 text-lg"></i><h3 class="text-lg font-bold text-white">Artists You May Like</h3></div>
+        <div id="similarArtistsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+      </div>
+      
+      <div id="moreMusicYouMayLikeSection" class="mt-8 hidden">
+        <div class="flex items-center gap-2 mb-4"><i class="fas fa-music text-green-400 text-lg"></i><h3 class="text-lg font-bold text-white">More Music You May Like</h3></div>
+        <div id="moreMusicGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="globalAudioPlayer" class="fixed bottom-0 left-0 w-full bg-gray-900/95 backdrop-blur-lg border-t border-gray-700 p-2 z-50 hidden">
+    <div class="max-w-7xl mx-auto flex items-center gap-2">
+      <div class="min-w-[100px] sm:min-w-[150px] truncate"><p id="nowPlayingTitle" class="text-xs font-semibold text-white truncate">No track</p><p id="nowPlayingArtist" class="text-[10px] text-gray-400 truncate">—</p></div>
+      <div class="flex-1 flex items-center gap-2">
+        <button id="playPauseBtn" class="w-7 h-7 rounded-full bg-amber-600 flex items-center justify-center shrink-0"><i id="playPauseIcon" class="fas fa-play text-white text-[10px]"></i></button>
+        <span id="currentTime" class="text-[10px] text-gray-400 font-mono">0:00</span>
+        <input type="range" id="progressBar" value="0" class="flex-1 h-1 rounded-full accent-amber-500">
+        <span id="duration" class="text-[10px] text-gray-400 font-mono">0:00</span>
+      </div>
+      <button id="closePlayerBtn" class="text-gray-400 hover:text-white p-1 shrink-0"><i class="fas fa-times text-xs"></i></button>
+    </div>
+  </div>
+  <audio id="globalAudio"></audio>
+
+  <!-- Circular Loading Overlay -->
+  <div class="circular-loading-overlay">
+    <div class="circular-loader">
+      <div class="loader-ring-outer"></div>
+      <div class="loader-ring-middle"></div>
+      <div class="loader-ring-inner"></div>
+      <div class="loader-center"><i class="fas fa-music"></i></div>
+      <div class="loading-text-container"><div class="loading-text">LOADING<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></div>
+    </div>
+  </div>
+
+  <div id="searchResultsSection" class="hidden max-w-7xl mx-auto px-3 sm:px-5 py-6 sm:py-8">
+    <button id="clearSearchBtn" class="text-amber-400 hover:text-amber-300 mb-4 flex items-center gap-1 text-sm"><i class="fas fa-arrow-left"></i> Back to Home</button>
+    <h2 class="text-xl font-bold mb-4">Search Results</h2>
+    <div id="searchResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6"></div>
+  </div>
+
+  <script>
+    // ========== SUPABASE CONFIGURATION ==========
+    const SUPABASE_URL = 'https://zqqrajzjncirvywmewkf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxcXJhanpqbmNpcnZ5d21ld2tmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MjY1NDIsImV4cCI6MjA5NjEwMjU0Mn0.mVCtw5SbvSxlgMWeiMW2k-uwpqqs23_-MU868_eR8OY';
+
+    let supabaseClient;
+    let customArtists = [];
+    let customTracks = [];
+    let trendingSongs = [];
+    let tapCount = 0;
+    let tapTimer = null;
+    let currentPlayingSongId = null;
+    let navigationHistory = [];
+    let currentPage = 1;
+    let itemsPerPage = 15;
+    let currentArtistTracks = [];
+    let currentArtistName = '';
+    let isAdminLoggedIn = false;
+
+    const ADMIN_PASSWORD = 'Buliisa2024';
+
+    function showCircularLoading() {
+      const overlay = document.querySelector('.circular-loading-overlay');
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function hideCircularLoading() {
+      const overlay = document.querySelector('.circular-loading-overlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    function showToast(msg, isError = false) {
+      let t = document.createElement('div');
+      t.className = 'toast-notification';
+      t.style.background = isError ? '#dc2626' : '#1f2937';
+      t.style.borderLeftColor = isError ? '#dc2626' : '#f59e0b';
+      t.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-info-circle'} mr-2"></i>${msg}`;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    function formatTime(s) {
+      if (isNaN(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    // ========== APK DOWNLOAD FUNCTION ==========
+    function downloadApk() {
+      const apkUrl = 'https://zqqrajzjncirvywmewkf.supabase.co/storage/v1/object/public/apks/buliisa-expose.apk';
+      window.location.href = apkUrl;
+    }
+
+    async function loadDataFromSupabase() {
+      showCircularLoading();
+      try {
+        const { data: artists } = await supabaseClient.from('artists').select('*').order('name');
+        const { data: tracks } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
+        const { data: trending } = await supabaseClient.from('trending').select('track_id');
+        customArtists = artists || [];
+        customTracks = tracks || [];
+        trendingSongs = trending?.map(t => t.track_id) || [];
+        renderAllSections();
+        hideCircularLoading();
+      } catch (e) {
+        hideCircularLoading();
+        console.error(e);
+        showToast('Error loading data', true);
+      }
+    }
+
+    function renderSongCard(track, rank = null) {
+      const playCount = parseInt(track.plays || 0);
+      const downloadCount = parseInt(track.downloads || 0);
+      const rankHtml = rank ? `<div class="most-played-rank">${rank === 1 ? '👑' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}</div>` : '';
+      const coverImg = track.cover_image || 'https://placehold.co/400x400/1a1a2e/ffffff?text=No+Cover';
+      return `
+        <div class="track-card" data-track-id="${track.id}">
+          <div class="relative cursor-pointer" onclick="goToArtistProfile('${escapeHtml(track.artist)}')">
+            ${rankHtml}
+            <div class="play-count"><i class="fas fa-headphones"></i> ${formatNumber(playCount)}</div>
+            <div class="aspect-square"><img src="${coverImg}" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Music'"></div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold truncate text-white cursor-pointer hover:text-amber-400" onclick="goToArtistProfile('${escapeHtml(track.artist)}')">${escapeHtml(track.title)}</h3>
+            <p class="text-amber-300 text-sm truncate cursor-pointer hover:text-amber-200" onclick="goToArtistProfile('${escapeHtml(track.artist)}')">${escapeHtml(track.artist)}</p>
+            <div class="flex justify-between mt-2 text-xs text-gray-500">
+              <span><i class="fas fa-download"></i> ${formatNumber(downloadCount)}</span>
+              <span><i class="fas fa-play"></i> ${formatNumber(playCount)}</span>
+            </div>
+            <div class="flex justify-between items-center mt-3 gap-2">
+              <button class="card-play-btn flex-1 text-white px-4 py-2 rounded-lg text-sm" data-id="${track.id}" data-url="${track.audio_url}" data-title="${escapeHtml(track.title)}" data-artist="${escapeHtml(track.artist)}"><i class="fas fa-play"></i> Play</button>
+              <button class="card-download-btn bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm" data-id="${track.id}" data-url="${track.audio_url}" data-title="${escapeHtml(track.title)}"><i class="fas fa-download"></i></button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTrendingSongs() {
+      const grid = document.getElementById('trendingGrid');
+      if (!grid) return;
+      const trending = customTracks.filter(t => trendingSongs.includes(t.id));
+      if (!trending.length) {
+        grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No trending songs</div>';
+        return;
+      }
+      let html = '';
+      trending.slice(0, 8).forEach(track => { html += renderSongCard(track); });
+      grid.innerHTML = html;
+      attachCardButtonEvents();
+    }
+
+    function renderNewSongs() {
+      const grid = document.getElementById('newSongsGrid');
+      if (!grid) return;
+      const news = customTracks.filter(t => t.is_new === true);
+      if (!news.length) {
+        grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No new releases</div>';
+        return;
+      }
+      let html = '';
+      news.slice(0, 8).forEach(track => { html += renderSongCard(track); });
+      grid.innerHTML = html;
+      attachCardButtonEvents();
+    }
+
+    function renderMostPlayedSongs() {
+      const grid = document.getElementById('mostPlayedGrid');
+      if (!grid) return;
+      let mostPlayed = [...customTracks].sort((a, b) => parseInt(b.plays || 0) - parseInt(a.plays || 0)).slice(0, 8);
+      let html = '';
+      mostPlayed.forEach((track, index) => { html += renderSongCard(track, index + 1); });
+      grid.innerHTML = html;
+      attachCardButtonEvents();
+    }
+
+    function renderFeaturedArtists() {
+      const grid = document.getElementById('artistsGrid');
+      if (!grid) return;
+      if (!customArtists.length) {
+        grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No artists found</div>';
+        return;
+      }
+      let html = '';
+      customArtists.slice(0, 12).forEach(artist => {
+        const imgUrl = artist.image_url || 'https://placehold.co/400x400/1a1a2e/ffffff?text=Artist';
+        html += `<div class="featured-artist-card" data-artist='${JSON.stringify(artist)}'><div class="artist-circle"><img src="${imgUrl}" loading="lazy" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Artist'"><div class="artist-name"><span>${escapeHtml(artist.name)}</span></div></div></div>`;
+      });
+      grid.innerHTML = html;
+      document.querySelectorAll('.featured-artist-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const artist = JSON.parse(card.dataset.artist);
+          showArtistMusic(artist);
+        });
+      });
+    }
+
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      if (!grid) return;
+      const categories = [
+        { name: "Ugandan Music", icon: "fas fa-flag-africa" },
+        { name: "Alur Music", icon: "fas fa-drumstick-bite" },
+        { name: "Lugungu Music", icon: "fas fa-language" },
+        { name: "Kadongo Kamu", icon: "fas fa-guitar" },
+        { name: "Old Music", icon: "fas fa-clock" },
+        { name: "Home Gospel", icon: "fas fa-home" },
+        { name: "Ligala Music", icon: "fas fa-church" },
+        { name: "Afrobeats", icon: "fas fa-drum" },
+        { name: "R&B", icon: "fas fa-heart" },
+        { name: "Pop", icon: "fas fa-star" }
+      ];
+      let html = '';
+      categories.forEach(cat => {
+        const count = customArtists.filter(a => a.category === cat.name).length;
+        html += `<div class="category-chip" data-category='${JSON.stringify(cat)}'><i class="${cat.icon} text-amber-400 mr-2"></i><span>${cat.name}</span><span class="ml-2 text-xs text-gray-400">(${count})</span></div>`;
+      });
+      grid.innerHTML = html;
+      document.querySelectorAll('.category-chip').forEach(el => {
+        el.addEventListener('click', () => {
+          const cat = JSON.parse(el.dataset.category);
+          showCategoryArtists(cat);
+        });
+      });
+    }
+
+    function renderAllSections() {
+      renderCategories();
+      renderFeaturedArtists();
+      renderNewSongs();
+      renderTrendingSongs();
+      renderMostPlayedSongs();
+    }
+
+    async function showArtistMusic(artist, addToHistory = true) {
+      showCircularLoading();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      currentArtistName = artist.name;
+      currentArtistTracks = customTracks.filter(t => t.artist === artist.name);
+      currentPage = 1;
+      
+      document.getElementById('mainContent')?.classList.add('hidden');
+      document.getElementById('categoryArtistsSection')?.classList.add('hidden');
+      document.getElementById('searchResultsSection')?.classList.add('hidden');
+      document.getElementById('artistMusicSection')?.classList.remove('hidden');
+      
+      document.getElementById('selectedArtistName').innerText = artist.name;
+      document.getElementById('artistTrackCount').innerText = `${currentArtistTracks.length} songs`;
+      
+      const imgDiv = document.getElementById('selectedArtistImage');
+      const imgUrl = artist.image_url || 'https://placehold.co/400x400/1a1a2e/ffffff?text=Artist';
+      imgDiv.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Artist'">`;
+      
+      renderArtistTracksList();
+      showSimilarArtists(artist.id);
+      showRandomMusicRecommendations(artist.name);
+      
+      if (addToHistory) pushToHistory('artist', artist);
+      hideCircularLoading();
+    }
+
+    function renderArtistTracksList() {
+      const container = document.getElementById('artistTracksGrid');
+      if (!container) return;
+      
+      const start = (currentPage - 1) * itemsPerPage;
+      const paginated = currentArtistTracks.slice(start, start + itemsPerPage);
+      const totalPages = Math.ceil(currentArtistTracks.length / itemsPerPage);
+      
+      if (!paginated.length) {
+        container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No tracks found</div>';
+        return;
+      }
+      
+      let html = '<div class="artist-songs-list">';
+      paginated.forEach((track, index) => {
+        const globalRank = (currentPage - 1) * itemsPerPage + index + 1;
+        const playCount = parseInt(track.plays || 0);
+        const downloadCount = parseInt(track.downloads || 0);
+        
+        html += `
+          <div class="song-list-item">
+            <div class="song-list-content">
+              <div class="song-rank-number">
+                <span class="rank-number">${globalRank}</span>
+              </div>
+              <div class="song-title-section">
+                <div class="song-title">
+                  <span class="song-title-main">${escapeHtml(track.title)}</span>
+                </div>
+                <div class="song-artist-name"><i class="fas fa-microphone-alt text-amber-400 mr-1"></i> ${escapeHtml(track.artist)}</div>
+              </div>
+              <div class="song-actions">
+                <div class="song-stats">
+                  <span><i class="fas fa-headphones text-blue-400"></i> ${formatNumber(playCount)}</span>
+                  <span><i class="fas fa-download text-green-400"></i> ${formatNumber(downloadCount)}</span>
+                </div>
+                <button class="song-play-btn-list" data-id="${track.id}" data-url="${track.audio_url}" data-title="${escapeHtml(track.title)}" data-artist="${escapeHtml(track.artist)}"><i class="fas fa-play"></i> Play</button>
+                <button class="song-download-btn-list" data-id="${track.id}" data-url="${track.audio_url}" data-title="${escapeHtml(track.title)}"><i class="fas fa-download"></i></button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+      
+      if (totalPages > 1) {
+        const paginationHtml = `
+          <div class="pagination-container">
+            <button class="pagination-btn prev-page" ${currentPage === 1 ? 'disabled' : ''}>
+              <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <span class="page-info">${currentPage} / ${totalPages}</span>
+            <button class="pagination-btn next-page" ${currentPage === totalPages ? 'disabled' : ''}>
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', paginationHtml);
+        
+        document.querySelector('.prev-page')?.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage--;
+            renderArtistTracksList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+        
+        document.querySelector('.next-page')?.addEventListener('click', () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderArtistTracksList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
+      
+      attachListButtonEvents();
+    }
+
+    function attachListButtonEvents() {
+      document.querySelectorAll('.song-play-btn-list').forEach(btn => {
+        btn.removeEventListener('click', handleListPlay);
+        btn.addEventListener('click', handleListPlay);
+      });
+      document.querySelectorAll('.song-download-btn-list').forEach(btn => {
+        btn.removeEventListener('click', handleListDownload);
+        btn.addEventListener('click', handleListDownload);
+      });
+    }
+
+    function handleListPlay(e) {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      const songId = parseInt(btn.dataset.id);
+      const url = btn.dataset.url;
+      const title = btn.dataset.title;
+      const artist = btn.dataset.artist;
+      
+      const listItem = btn.closest('.song-list-item');
+      if (listItem) {
+        listItem.style.background = 'rgba(245, 158, 11, 0.15)';
+        setTimeout(() => { listItem.style.background = ''; }, 300);
+      }
+      
+      if (currentPlayingSongId === songId && window.audioEl && !window.audioEl.paused) {
+        window.audioEl.pause();
+        document.getElementById('playPauseIcon')?.classList.replace('fa-pause', 'fa-play');
+        btn.innerHTML = '<i class="fas fa-play"></i> Play';
+      } else {
+        playTrack(url, title, artist, songId);
+        btn.innerHTML = '<i class="fas fa-pause"></i> Playing';
+        document.querySelectorAll('.song-play-btn-list').forEach(otherBtn => {
+          if (otherBtn !== btn) otherBtn.innerHTML = '<i class="fas fa-play"></i> Play';
+        });
+        window.audioEl.onended = () => { btn.innerHTML = '<i class="fas fa-play"></i> Play'; };
+      }
+    }
+
+    function handleListDownload(e) {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      window.open(btn.dataset.url, '_blank');
+      showToast(`Downloading ${btn.dataset.title}`);
+      const trackId = parseInt(btn.dataset.id);
+      const track = customTracks.find(t => t.id === trackId);
+      if (track) {
+        const newDownloads = (parseInt(track.downloads || 0) + 1).toString();
+        track.downloads = newDownloads;
+        supabaseClient.from('tracks').update({ downloads: newDownloads }).eq('id', trackId);
+      }
+    }
+
+    function attachCardButtonEvents() {
+      document.querySelectorAll('.card-play-btn').forEach(btn => {
+        btn.removeEventListener('click', handleCardPlay);
+        btn.addEventListener('click', handleCardPlay);
+      });
+      document.querySelectorAll('.card-download-btn').forEach(btn => {
+        btn.removeEventListener('click', handleCardDownload);
+        btn.addEventListener('click', handleCardDownload);
+      });
+    }
+
+    function handleCardPlay(e) {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      const songId = parseInt(btn.dataset.id);
+      const url = btn.dataset.url;
+      const title = btn.dataset.title;
+      const artist = btn.dataset.artist;
+      
+      if (currentPlayingSongId === songId && window.audioEl && !window.audioEl.paused) {
+        window.audioEl.pause();
+        document.getElementById('playPauseIcon')?.classList.replace('fa-pause', 'fa-play');
+        btn.innerHTML = '<i class="fas fa-play"></i> Play';
+      } else {
+        playTrack(url, title, artist, songId);
+        btn.innerHTML = '<i class="fas fa-pause"></i> Playing';
+        document.querySelectorAll('.card-play-btn').forEach(otherBtn => {
+          if (otherBtn !== btn) otherBtn.innerHTML = '<i class="fas fa-play"></i> Play';
+        });
+        window.audioEl.onended = () => { btn.innerHTML = '<i class="fas fa-play"></i> Play'; };
+      }
+    }
+
+    function handleCardDownload(e) {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      window.open(btn.dataset.url, '_blank');
+      showToast(`Downloading ${btn.dataset.title}`);
+      const trackId = parseInt(btn.dataset.id);
+      const track = customTracks.find(t => t.id === trackId);
+      if (track) {
+        const newDownloads = (parseInt(track.downloads || 0) + 1).toString();
+        track.downloads = newDownloads;
+        supabaseClient.from('tracks').update({ downloads: newDownloads }).eq('id', trackId);
+      }
+    }
+
+    function playTrack(url, title, artist, songId) {
+      const player = document.getElementById('globalAudioPlayer');
+      const audio = document.getElementById('globalAudio');
+      if (player) player.style.display = 'flex';
+      audio.src = url;
+      audio.play();
+      
+      document.getElementById('nowPlayingTitle').innerText = title;
+      document.getElementById('nowPlayingArtist').innerText = artist;
+      document.getElementById('playPauseIcon')?.classList.replace('fa-play', 'fa-pause');
+      currentPlayingSongId = songId;
+      
+      document.querySelectorAll('.card-play-btn, .song-play-btn-list').forEach(btn => {
+        if (parseInt(btn.dataset.id) === songId) {
+          btn.innerHTML = '<i class="fas fa-pause"></i> Playing';
+        } else {
+          btn.innerHTML = '<i class="fas fa-play"></i> Play';
+        }
+      });
+      
+      const track = customTracks.find(t => t.id === songId);
+      if (track) {
+        const newPlays = (parseInt(track.plays || 0) + 1).toString();
+        track.plays = newPlays;
+        supabaseClient.from('tracks').update({ plays: newPlays }).eq('id', songId).then(() => {
+          renderMostPlayedSongs();
+          renderArtistTracksList();
+        });
+      }
+    }
+
+    async function showSimilarArtists(currentArtistId) {
+      const similar = customArtists.filter(a => a.id !== currentArtistId).slice(0, 6);
+      const section = document.getElementById('similarArtistsSection');
+      const grid = document.getElementById('similarArtistsGrid');
+      if (!similar.length || !section || !grid) { if (section) section.classList.add('hidden'); return; }
+      section.classList.remove('hidden');
+      let html = '';
+      similar.forEach(artist => {
+        const imgUrl = artist.image_url || 'https://placehold.co/400x400/1a1a2e/ffffff?text=Artist';
+        html += `<div class="similar-artist-card" data-artist='${JSON.stringify(artist)}'><img src="${imgUrl}" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Artist'"><div class="artist-name"><span>${escapeHtml(artist.name)}</span></div></div>`;
+      });
+      grid.innerHTML = html;
+      document.querySelectorAll('.similar-artist-card').forEach(card => {
+        card.addEventListener('click', () => { const artist = JSON.parse(card.dataset.artist); showArtistMusic(artist); });
+      });
+    }
+
+    function showRandomMusicRecommendations(currentArtist) {
+      const randomTracks = customTracks.filter(t => t.artist !== currentArtist).sort(() => 0.5 - Math.random()).slice(0, 8);
+      const section = document.getElementById('moreMusicYouMayLikeSection');
+      const grid = document.getElementById('moreMusicGrid');
+      if (!randomTracks.length || !section || !grid) { if (section) section.classList.add('hidden'); return; }
+      section.classList.remove('hidden');
+      let html = '';
+      randomTracks.forEach(track => {
+        const coverImg = track.cover_image || 'https://placehold.co/400x400/1a1a2e/ffffff?text=Music';
+        html += `<div class="more-music-card" onclick="goToArtistProfile('${escapeHtml(track.artist)}')"><img src="${coverImg}" loading="lazy" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Music'"><div class="p-3"><h3 class="font-bold truncate">${escapeHtml(track.title)}</h3><p class="text-amber-300 text-xs truncate">${escapeHtml(track.artist)}</p></div></div>`;
+      });
+      grid.innerHTML = html;
+    }
+
+    async function showCategoryArtists(cat, addToHistory = true) {
+      showCircularLoading();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const artists = customArtists.filter(a => a.category === cat.name);
+      document.getElementById('mainContent')?.classList.add('hidden');
+      document.getElementById('artistMusicSection')?.classList.add('hidden');
+      document.getElementById('searchResultsSection')?.classList.add('hidden');
+      document.getElementById('categoryArtistsSection')?.classList.remove('hidden');
+      
+      document.getElementById('selectedCategoryName').innerHTML = `<i class="${cat.icon} text-amber-400 mr-2"></i> ${cat.name} Artists`;
+      document.getElementById('categoryArtistCount').innerHTML = `${artists.length} artists found`;
+      
+      const grid = document.getElementById('categoryArtistsGrid');
+      if (!artists.length) { grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No artists found</div>'; hideCircularLoading(); return; }
+      
+      let html = '';
+      artists.forEach(artist => {
+        const imgUrl = artist.image_url || 'https://placehold.co/400x400/1a1a2e/ffffff?text=Artist';
+        html += `<div class="category-artist-card" data-artist='${JSON.stringify(artist)}'><img src="${imgUrl}" onerror="this.src='https://placehold.co/400x400/1a1a2e/ffffff?text=Artist'"><div class="artist-name"><span>${escapeHtml(artist.name)}</span></div></div>`;
+      });
+      grid.innerHTML = html;
+      
+      document.querySelectorAll('.category-artist-card').forEach(card => {
+        card.addEventListener('click', () => { const artist = JSON.parse(card.dataset.artist); showArtistMusic(artist); });
+      });
+      
+      if (addToHistory) pushToHistory('category', cat);
+      hideCircularLoading();
+    }
+
+    window.goToArtistProfile = function(artistName) {
+      const artist = customArtists.find(a => a.name === artistName);
+      if (artist) showArtistMusic(artist);
+      else showToast('Artist not found', true);
+    };
+
+    function pushToHistory(section, data) { navigationHistory.push({ section, data }); updateBackButton(); }
+    function updateBackButton() { const btn = document.getElementById('backNavigationBtn'); if (btn) { if (navigationHistory.length > 1) btn.classList.remove('hidden'); else btn.classList.add('hidden'); } }
+
+    function goBack() { 
+      if (navigationHistory.length > 1) { 
+        navigationHistory.pop(); 
+        const prev = navigationHistory[navigationHistory.length - 1]; 
+        if (prev.section === 'home') showHomepage(); 
+        else if (prev.section === 'artist') showArtistMusic(prev.data, false); 
+        else if (prev.section === 'category') showCategoryArtists(prev.data, false); 
+      } else { 
+        showHomepage(); 
+      } 
+      updateBackButton(); 
+    }
+
+    function showHomepage() { 
+      document.getElementById('mainContent')?.classList.remove('hidden'); 
+      document.getElementById('categoryArtistsSection')?.classList.add('hidden'); 
+      document.getElementById('artistMusicSection')?.classList.add('hidden'); 
+      document.getElementById('searchResultsSection')?.classList.add('hidden'); 
+      navigationHistory = [{ section: 'home' }]; 
+      updateBackButton(); 
+      window.scrollTo({ top: 0 }); 
+    }
+
+    async function performSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return showHomepage();
+      
+      showCircularLoading();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const results = [...customTracks.filter(t => t.title.toLowerCase().includes(query.toLowerCase()) || t.artist.toLowerCase().includes(query.toLowerCase())), ...customArtists.filter(a => a.name.toLowerCase().includes(query.toLowerCase()))].slice(0, 20);
+      
+      document.getElementById('mainContent').classList.add('hidden');
+      document.getElementById('searchResultsSection').classList.remove('hidden');
+      
+      const grid = document.getElementById('searchResultsGrid');
+      if (!results.length) { 
+        grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No results</div>'; 
+        hideCircularLoading(); 
+        return; 
+      }
+      
+      let html = '';
+      results.forEach(r => {
+        if (r.title) { 
+          html += renderSongCard(r); 
+        } else { 
+          const imgUrl = r.image_url || 'https://placehold.co/400x400/1a1a2e/ffffff?text=Artist'; 
+          html += `<div class="featured-artist-card cursor-pointer" onclick='showArtistMusic(${JSON.stringify(r)})'><div class="artist-circle"><img src="${imgUrl}" class="rounded-full border-2 border-amber-500"><div class="artist-name mt-2"><span>${escapeHtml(r.name)}</span></div></div></div>`; 
+        }
+      });
+      grid.innerHTML = html;
+      attachCardButtonEvents();
+      hideCircularLoading();
+    }
+
+    // ========== ADMIN PANEL FUNCTIONS ==========
+    
+    let selectedSongsForDelete = new Set();
+    let selectedArtistsForDelete = new Set();
+
+    function showAdminLogin() {
+      const password = prompt('Enter admin password:');
+      if (password === ADMIN_PASSWORD) {
+        isAdminLoggedIn = true;
+        document.getElementById('adminModal').classList.add('active');
+        renderAdminSongsTable();
+        renderAdminArtistsTable();
+        setupAdminTabs();
+        showToast('Admin access granted');
+      } else if (password !== null) {
+        showToast('Wrong password!', true);
+      }
+    }
+
+    function closeAdminPanel() {
+      document.getElementById('adminModal').classList.remove('active');
+    }
+
+    function setupAdminTabs() {
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabId = tab.dataset.tab;
+          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById(`${tabId}Panel`).classList.add('active');
+          
+          if (tabId === 'songs') renderAdminSongsTable();
+          if (tabId === 'artists') renderAdminArtistsTable();
+        });
+      });
+    }
+
+    function renderAdminSongsTable() {
+      const searchTerm = document.getElementById('songSearchInput')?.value.toLowerCase() || '';
+      let filteredSongs = [...customTracks];
+      
+      if (searchTerm) {
+        filteredSongs = filteredSongs.filter(song => 
+          song.title.toLowerCase().includes(searchTerm) || 
+          song.artist.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      if (!filteredSongs.length) {
+        document.getElementById('songsTableContainer').innerHTML = '<div class="text-center py-8 text-gray-400">No songs found</div>';
+        return;
+      }
+      
+      let html = `
+        <table>
+          <thead>
+            <tr><th><input type="checkbox" id="adminSelectAllSongs" class="admin-checkbox"></th>
+              <th>#</th><th>Cover</th><th>Title</th><th>Artist</th><th>Plays</th><th>Downloads</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+      `;
+      
+      filteredSongs.forEach((song, index) => {
+        const isChecked = selectedSongsForDelete.has(song.id);
+        const coverImg = song.cover_image || 'https://placehold.co/50x50/1a1a2e/ffffff?text=No+Cover';
+        html += `
+          <tr>
+            <td><input type="checkbox" class="song-checkbox admin-checkbox" data-id="${song.id}" ${isChecked ? 'checked' : ''}></td>
+            <td>${index + 1}</td>
+            <td><img src="${coverImg}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;"></td>
+            <td>${escapeHtml(song.title)}</td>
+            <td>${escapeHtml(song.artist)}</td>
+            <td>${formatNumber(song.plays || 0)}</td>
+            <td>${formatNumber(song.downloads || 0)}</td>
+            <td><button class="delete-btn" onclick="deleteSingleSong(${song.id})"><i class="fas fa-trash"></i> Delete</button></td>
+          </tr>
+        `;
+      });
+      
+      html += '</tbody></table>';
+      document.getElementById('songsTableContainer').innerHTML = html;
+      
+      document.querySelectorAll('.song-checkbox').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          if (e.target.checked) selectedSongsForDelete.add(id);
+          else selectedSongsForDelete.delete(id);
+        });
+      });
+      
+      const selectAllBtn = document.getElementById('adminSelectAllSongs');
+      if (selectAllBtn) {
+        selectAllBtn.addEventListener('change', (e) => {
+          document.querySelectorAll('.song-checkbox').forEach(cb => {
+            cb.checked = e.target.checked;
+            const id = parseInt(cb.dataset.id);
+            if (e.target.checked) selectedSongsForDelete.add(id);
+            else selectedSongsForDelete.delete(id);
+          });
+        });
+      }
+    }
+
+    function renderAdminArtistsTable() {
+      const searchTerm = document.getElementById('artistSearchInput')?.value.toLowerCase() || '';
+      let filteredArtists = [...customArtists];
+      
+      if (searchTerm) {
+        filteredArtists = filteredArtists.filter(artist => 
+          artist.name.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      if (!filteredArtists.length) {
+        document.getElementById('artistsTableContainer').innerHTML = '<div class="text-center py-8 text-gray-400">No artists found</div>';
+        return;
+      }
+      
+      let html = `
+        <table>
+          <thead>
+            <tr><th><input type="checkbox" id="adminSelectAllArtists" class="admin-checkbox"></th>
+              <th>#</th><th>Image</th><th>Name</th><th>Category</th><th>Songs Count</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+      `;
+      
+      filteredArtists.forEach((artist, index) => {
+        const isChecked = selectedArtistsForDelete.has(artist.id);
+        const imgUrl = artist.image_url || 'https://placehold.co/50x50/1a1a2e/ffffff?text=Artist';
+        const songCount = customTracks.filter(t => t.artist === artist.name).length;
+        
+        html += `
+          <tr>
+            <td><input type="checkbox" class="artist-checkbox admin-checkbox" data-id="${artist.id}" ${isChecked ? 'checked' : ''}></td>
+            <td>${index + 1}</td>
+            <td><img src="${imgUrl}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"></td>
+            <td>${escapeHtml(artist.name)}</td>
+            <td>${escapeHtml(artist.category || 'Uncategorized')}</td>
+            <td>${songCount}</td>
+            <td><button class="delete-btn" onclick="deleteSingleArtist(${artist.id})"><i class="fas fa-trash"></i> Delete</button></td>
+          </tr>
+        `;
+      });
+      
+      html += '</tbody></table>';
+      document.getElementById('artistsTableContainer').innerHTML = html;
+      
+      document.querySelectorAll('.artist-checkbox').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          if (e.target.checked) selectedArtistsForDelete.add(id);
+          else selectedArtistsForDelete.delete(id);
+        });
+      });
+      
+      const selectAllBtn = document.getElementById('adminSelectAllArtists');
+      if (selectAllBtn) {
+        selectAllBtn.addEventListener('change', (e) => {
+          document.querySelectorAll('.artist-checkbox').forEach(cb => {
+            cb.checked = e.target.checked;
+            const id = parseInt(cb.dataset.id);
+            if (e.target.checked) selectedArtistsForDelete.add(id);
+            else selectedArtistsForDelete.delete(id);
+          });
+        });
+      }
+    }
+
+    window.deleteSingleSong = async function(songId) {
+      if (confirm('Are you sure you want to delete this song?')) {
+        showCircularLoading();
+        const { error } = await supabaseClient.from('tracks').delete().eq('id', songId);
+        if (error) {
+          showToast('Error deleting song', true);
+        } else {
+          showToast('Song deleted successfully');
+          await loadDataFromSupabase();
+          renderAdminSongsTable();
+        }
+        hideCircularLoading();
+      }
+    };
+
+    window.deleteSingleArtist = async function(artistId) {
+      const artist = customArtists.find(a => a.id === artistId);
+      if (confirm(`Delete "${artist?.name}" and ALL their songs? This cannot be undone!`)) {
+        showCircularLoading();
+        
+        // Delete all songs by this artist
+        const artistSongs = customTracks.filter(t => t.artist === artist?.name);
+        for (const song of artistSongs) {
+          await supabaseClient.from('tracks').delete().eq('id', song.id);
+        }
+        
+        // Delete the artist
+        const { error } = await supabaseClient.from('artists').delete().eq('id', artistId);
+        
+        if (error) {
+          showToast('Error deleting artist', true);
+        } else {
+          showToast(`Deleted "${artist?.name}" and ${artistSongs.length} songs`);
+          await loadDataFromSupabase();
+          renderAdminArtistsTable();
+        }
+        hideCircularLoading();
+      }
+    };
+
+    // Bulk delete songs
+    document.getElementById('bulkDeleteSongsBtn')?.addEventListener('click', async () => {
+      if (selectedSongsForDelete.size === 0) {
+        showToast('No songs selected', true);
+        return;
+      }
+      
+      if (confirm(`Delete ${selectedSongsForDelete.size} selected songs?`)) {
+        showCircularLoading();
+        for (const songId of selectedSongsForDelete) {
+          await supabaseClient.from('tracks').delete().eq('id', songId);
+        }
+        selectedSongsForDelete.clear();
+        showToast(`${selectedSongsForDelete.size} songs deleted`);
+        await loadDataFromSupabase();
+        renderAdminSongsTable();
+        hideCircularLoading();
+      }
+    });
+
+    // Bulk delete artists
+    document.getElementById('bulkDeleteArtistsBtn')?.addEventListener('click', async () => {
+      if (selectedArtistsForDelete.size === 0) {
+        showToast('No artists selected', true);
+        return;
+      }
+      
+      let totalSongsDeleted = 0;
+      if (confirm(`Delete ${selectedArtistsForDelete.size} artists and ALL their songs? This cannot be undone!`)) {
+        showCircularLoading();
+        
+        for (const artistId of selectedArtistsForDelete) {
+          const artist = customArtists.find(a => a.id === artistId);
+          const artistSongs = customTracks.filter(t => t.artist === artist?.name);
+          totalSongsDeleted += artistSongs.length;
+          
+          for (const song of artistSongs) {
+            await supabaseClient.from('tracks').delete().eq('id', song.id);
+          }
+          await supabaseClient.from('artists').delete().eq('id', artistId);
+        }
+        
+        selectedArtistsForDelete.clear();
+        showToast(`Deleted ${selectedArtistsForDelete.size} artists and ${totalSongsDeleted} songs`);
+        await loadDataFromSupabase();
+        renderAdminArtistsTable();
+        hideCircularLoading();
+      }
+    });
+
+    // Batch upload functionality
+    document.getElementById('processBatchUpload')?.addEventListener('click', async () => {
+      const musicFiles = document.getElementById('musicFilesInput').files;
+      const coverFiles = document.getElementById('coverImagesInput').files;
+      
+      if (!musicFiles.length) {
+        showToast('Please select music files', true);
+        return;
+      }
+      
+      if (musicFiles.length > 20) {
+        showToast('Maximum 20 songs per batch', true);
+        return;
+      }
+      
+      showCircularLoading();
+      let successCount = 0;
+      
+      for (let i = 0; i < musicFiles.length; i++) {
+        const musicFile = musicFiles[i];
+        const coverFile = coverFiles[i] || coverFiles[coverFiles.length - 1];
+        
+        // Get file name without extension as title
+        const title = musicFile.name.replace(/\.[^/.]+$/, '');
+        const artist = prompt(`Enter artist name for "${title}":`);
+        
+        if (!artist) continue;
+        
+        try {
+          // Upload music file
+          const musicFileName = `${Date.now()}_${i}_${musicFile.name}`;
+          const { data: musicData, error: musicError } = await supabaseClient.storage
+            .from('songs')
+            .upload(musicFileName, musicFile);
+          
+          if (musicError) throw musicError;
+          
+          const musicUrl = supabaseClient.storage.from('songs').getPublicUrl(musicFileName).data.publicUrl;
+          
+          let coverUrl = null;
+          if (coverFile) {
+            const coverFileName = `cover_${Date.now()}_${i}_${coverFile.name}`;
+            const { data: coverData, error: coverError } = await supabaseClient.storage
+              .from('covers')
+              .upload(coverFileName, coverFile);
+            
+            if (!coverError) {
+              coverUrl = supabaseClient.storage.from('covers').getPublicUrl(coverFileName).data.publicUrl;
+            }
+          }
+          
+          // Save to tracks table
+          const { error: insertError } = await supabaseClient.from('tracks').insert({
+            title: title,
+            artist: artist,
+            audio_url: musicUrl,
+            cover_image: coverUrl,
+            plays: '0',
+            downloads: '0',
+            is_new: true,
+            created_at: new Date().toISOString()
+          });
+          
+          if (insertError) throw insertError;
+          successCount++;
+          
+        } catch (error) {
+          console.error(`Error uploading ${title}:`, error);
+          showToast(`Failed to upload ${title}`, true);
+        }
+      }
+      
+      showToast(`Uploaded ${successCount} of ${musicFiles.length} songs`);
+      await loadDataFromSupabase();
+      if (isAdminLoggedIn) renderAdminSongsTable();
+      hideCircularLoading();
+      
+      // Clear inputs
+      document.getElementById('musicFilesInput').value = '';
+      document.getElementById('coverImagesInput').value = '';
+    });
+
+    // Search filters
+    document.getElementById('songSearchInput')?.addEventListener('input', () => renderAdminSongsTable());
+    document.getElementById('artistSearchInput')?.addEventListener('input', () => renderAdminArtistsTable());
+
+    // Select all buttons
+    document.getElementById('selectAllSongsBtn')?.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.song-checkbox');
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      checkboxes.forEach(cb => {
+        cb.checked = !allChecked;
+        const id = parseInt(cb.dataset.id);
+        if (cb.checked) selectedSongsForDelete.add(id);
+        else selectedSongsForDelete.delete(id);
+      });
+    });
+
+    document.getElementById('selectAllArtistsBtn')?.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.artist-checkbox');
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      checkboxes.forEach(cb => {
+        cb.checked = !allChecked;
+        const id = parseInt(cb.dataset.id);
+        if (cb.checked) selectedArtistsForDelete.add(id);
+        else selectedArtistsForDelete.delete(id);
+      });
+    });
+
+    // Preview upload selection
+    document.getElementById('musicFilesInput')?.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      const preview = document.getElementById('uploadPreview');
+      if (files.length) {
+        preview.innerHTML = `<h3 class="font-bold mb-2">Selected Songs (${files.length}):</h3>`;
+        files.forEach(file => {
+          preview.innerHTML += `<div class="upload-item"><span><i class="fas fa-music"></i> ${file.name}</span><span class="text-green-400">Ready</span></div>`;
+        });
+      }
+    });
+
+    // Initialize
+    const supabaseScript = document.createElement('script');
+    supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    supabaseScript.onload = () => {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      init();
+    };
+    document.head.appendChild(supabaseScript);
+
+    async function init() {
+      await loadDataFromSupabase();
+      
+      window.audioEl = document.getElementById('globalAudio');
+      document.getElementById('playPauseBtn')?.addEventListener('click', () => { if (window.audioEl.paused) window.audioEl.play(); else window.audioEl.pause(); });
+      document.getElementById('progressBar')?.addEventListener('input', (e) => { if (window.audioEl.duration) window.audioEl.currentTime = (e.target.value / 100) * window.audioEl.duration; });
+      document.getElementById('closePlayerBtn')?.addEventListener('click', () => { document.getElementById('globalAudioPlayer').style.display = 'none'; window.audioEl.pause(); });
+      
+      window.audioEl.addEventListener('timeupdate', () => { if (window.audioEl.duration) { document.getElementById('progressBar').value = (window.audioEl.currentTime / window.audioEl.duration) * 100; document.getElementById('currentTime').innerText = formatTime(window.audioEl.currentTime); } });
+      window.audioEl.addEventListener('loadedmetadata', () => { document.getElementById('duration').innerText = formatTime(window.audioEl.duration); });
+      window.audioEl.addEventListener('play', () => { document.getElementById('playPauseIcon')?.classList.replace('fa-play', 'fa-pause'); });
+      window.audioEl.addEventListener('pause', () => { document.getElementById('playPauseIcon')?.classList.replace('fa-pause', 'fa-play'); });
+      
+      document.getElementById('homeBtn')?.addEventListener('click', showHomepage);
+      document.getElementById('backToCategoriesBtn')?.addEventListener('click', showHomepage);
+      document.getElementById('backToArtistsBtn')?.addEventListener('click', showHomepage);
+      document.getElementById('clearSearchBtn')?.addEventListener('click', () => { document.getElementById('searchInput').value = ''; showHomepage(); });
+      document.getElementById('searchSubmitBtn')?.addEventListener('click', performSearch);
+      document.getElementById('searchInput')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
+      document.getElementById('backNavigationBtn')?.addEventListener('click', goBack);
+      
+      // APK Download Button Event
+      document.getElementById('downloadApkBtn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        downloadApk();
+      });
+      
+      // Admin unlock (5 taps)
+      document.getElementById('homeBtn')?.addEventListener('click', () => { tapCount++; if (tapTimer) clearTimeout(tapTimer); tapTimer = setTimeout(() => { tapCount = 0; }, 1000); if (tapCount >= 5) { document.getElementById('adminToggleBtn').classList.add('admin-visible'); showToast('Admin unlocked - Tap the shield icon'); tapCount = 0; } });
+      
+      document.getElementById('adminToggleBtn')?.addEventListener('click', showAdminLogin);
+      
+      navigationHistory = [{ section: 'home' }];
+      updateBackButton();
+      showToast('Welcome to Albertine Music! 🎵');
+    }
+  </script>
+</body>
+</html>
+    <script src='https://cdn.tailwindcss.com'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js'></script><script  src="./script.js"></script>
+
+  </body>
+  
+</html>
